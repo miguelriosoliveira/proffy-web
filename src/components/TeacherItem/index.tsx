@@ -1,46 +1,60 @@
 import React from 'react';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
+import api from '../../services/api';
 
 import './styles.css';
 
-const TeacherItem: React.FC = () => {
+export interface TeacherProps {
+	id: number;
+	subject: string;
+	cost: number;
+	name: string;
+	avatar: string;
+	whatsapp: string;
+	bio: string;
+}
+
+interface Props {
+	teacher: TeacherProps;
+}
+
+const TeacherItem: React.FC<Props> = ({
+	teacher: { id, avatar, name, subject, bio, cost, whatsapp },
+}) => {
+	function createNewConnection(): void {
+		api.post('connections', { user_id: id });
+	}
+
 	return (
 		<article className="teacher-item">
 			<header>
-				<img
-					src="https://avatars3.githubusercontent.com/u/12296400?s=460&u=12bb04026b457caad8edb63cc24fa28bf92f6c6e&v=4"
-					alt="Miguel Rios"
-				/>
+				<img src={avatar} alt={name} />
 				<div>
-					<strong>Miguel Rios</strong>
-					<span>Matemática</span>
+					<strong>{name}</strong>
+					<span>{subject}</span>
 				</div>
 			</header>
 
-			<p>
-				Enthusiast of the best web & mobile development technologies.
-				<br />
-				<br />
-				Passionate about education and changing people's lives through programming. More than
-				200,000 people have already undergone one of my trainings.
-				<br />
-				<br />
-				"Nothing in this world beats good old persistence. Talent does not surpass. Nothing more
-				common than talented failures. Genius does not overcome. Unrecognized geniuses is
-				practically a cliche. Education does not exceed. The world is full of educated fools.
-				Persistence and determination alone are powerful."
-			</p>
+			<p>{bio}</p>
 
 			<footer>
 				<p>
 					Preço/hora
-					<strong>R$ 80,00</strong>
+					<strong>
+						R$
+						{` ${cost}`}
+					</strong>
 				</p>
-				<button type="button">
+				<a
+					target="_blank"
+					rel="noreferrer"
+					href={`https://wa.me/${whatsapp}`}
+					onClick={createNewConnection}
+				>
 					<img src={whatsappIcon} alt="WhatsApp" />
 					Entrar em contato
-				</button>
+				</a>
 			</footer>
 		</article>
 	);
